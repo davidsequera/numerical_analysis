@@ -8,7 +8,7 @@ def SOR(A,b, T = 10**-6):
         raise ValueError("Matrix A and vector b must have the same size")
     
     # W omega
-    W = optimal_omega(A)
+    W = optimal_omega(A,b)
     print("W: ", W)
 
     X = np.zeros(n) # initial guess
@@ -28,8 +28,17 @@ def SOR(A,b, T = 10**-6):
     print("Iterations: ", i)
     return X
 
-t_j = lambda A: np.linalg.inv(np.diag(np.diag(A)))*(np.tril(A, k=-1)+np.triu(A, k=1))
-optimal_omega = lambda A: 2 / (1 + np.sqrt(1 - (np.max(np.linalg.eig(t_j(A)).eigenvalues))**2))
+# Tj = I - (D^-1)A
+def t_j(A,b):
+    n,n = A.shape
+    Tj, v = np.copy(A), np.copy(b)
+    for i in range(n):
+        Tj[i,i], v[i] =  0,-A[i,i]
+        Tj[i] /= v[i]
+    return Tj
+
+
+optimal_omega = lambda A,b: 2 / (1 + np.sqrt(1 - (np.max(np.abs(np.linalg.eig(t_j(A,b)).eigenvalues)))**2))
 
 A = np.array([[10., -1., 2., 0.],
               [-1., 11., -1., 3.],
@@ -37,6 +46,8 @@ A = np.array([[10., -1., 2., 0.],
               [0.0, 3., -1., 8.]], dtype=np.float64)
 
 b = np.array([6., 25., -11., 15.], dtype=np.float64)
+
+
 print (A)
 print (b, "\n", "*" * 50)
 x = SOR(A, b)
