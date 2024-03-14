@@ -1,6 +1,6 @@
 import numpy as np
 
-def SOR(A,b, T = 10**-6):
+def SOR(A,b, T = 1e-6):
     n,m = A.shape
     if n != m:
         raise ValueError("Matrix A must be square")
@@ -8,7 +8,7 @@ def SOR(A,b, T = 10**-6):
         raise ValueError("Matrix A and vector b must have the same size")
     
     # W omega
-    W = optimal_omega(A,b)
+    W = optimal_omega(A)
     print("W: ", W)
 
     X = np.zeros(n) # initial guess
@@ -29,21 +29,25 @@ def SOR(A,b, T = 10**-6):
     return X
 
 # Tj = I - (D^-1)A
-def t_j(A,b):
+def t_j(A):
     n,n = A.shape
-    Tj, v = np.copy(A), np.copy(b)
+    Tj, v = np.copy(A), np.zeros(n)
     for i in range(n):
         Tj[i,i], v[i] =  0,-A[i,i]
         Tj[i] /= v[i]
     return Tj
 
 
-optimal_omega = lambda A,b: 2 / (1 + np.sqrt(1 - (np.max(np.abs(np.linalg.eig(t_j(A,b)).eigenvalues)))**2))
+# vectorized version
+tt_j = lambda A: np.identity(A.shape[0]) - np.linalg.inv(np.diag(np.diag(A))) @ A
+
+optimal_omega = lambda A: 2 / (1 + np.sqrt(1 - (np.max(np.abs(np.linalg.eig(t_j(A)).eigenvalues)))**2))
 
 A = np.array([[10., -1., 2., 0.],
               [-1., 11., -1., 3.],
               [2., -1., 10., -1.],
               [0.0, 3., -1., 8.]], dtype=np.float64)
+
 
 b = np.array([6., 25., -11., 15.], dtype=np.float64)
 
