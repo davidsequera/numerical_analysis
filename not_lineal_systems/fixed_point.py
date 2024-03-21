@@ -23,7 +23,9 @@ def fixed_point(f, x0, max_iter, T = 1e-6, g=None, df=None):
 
 # Example
 f = lambda x: -x**3+2*x+1
-x0 = 1.5
+
+x0 = 1.0
 max_iter = 1000
 T = 1e-6
 print(fixed_point(f, x0, max_iter, T))
+print(fixed_point(f, x0, max_iter, T, g=lambda x: (x**3-1)/2))
