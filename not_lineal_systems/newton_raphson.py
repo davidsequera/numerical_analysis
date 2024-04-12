@@ -1,3 +1,6 @@
+# Description: Newton-Raphson method
+# Author: David Sequera
+
 def derivative(f, h=1e-6):
     # difference quotient method  (symmetric)
     return lambda x: (f(x + h) - f(x - h)) / (2 * h)
@@ -20,6 +23,7 @@ def newton_raphson(f, x0, T=1e-6, df=None):
 
 
 #  Example
-f = lambda x: 2*x**4 - 3*x**3 -2*x**2 + 3*x + 1
-x0 = 0
-print(newton_raphson(f, x0))
+f = lambda x: -x**3+2*x+1
+x0 = 1.5
+T = 1e-9
+print(newton_raphson(f, x0, T))

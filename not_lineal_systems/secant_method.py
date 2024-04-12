@@ -1,3 +1,6 @@
+# Description: Secant Method 
+# Author: David Sequera
+
 def secant_method(f, x0, x1,T=1e-6):
     y2 = 1
     i = 0
@@ -19,7 +22,8 @@ def secant_method(f, x0, x1,T=1e-6):
 
 
 #  Example
-f = lambda x: 2*x**4 - 3*x**3 -2*x**2 + 3*x + 1
-x0 = 3
-x1 = 4
-print('\n Function is 0 when x is: %0.8f' % secant_method(f, x0, x1))
+f = lambda x: -x**3+2*x+1
+x0 = 0
+x1 = 1.5
+T = 1e-9
+print('\n Function is 0 when x is: %0.8f' % secant_method(f, x0, x1, T))
